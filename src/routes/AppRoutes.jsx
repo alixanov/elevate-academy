@@ -15,7 +15,6 @@ const MainContent = styled.div`
   margin-left: 250px; /* Matches sidebar width */
   width: calc(100% - 250px);
   padding: 20px;
-  background-color: #f8f9fa;
   min-height: 100vh;
 `;
 

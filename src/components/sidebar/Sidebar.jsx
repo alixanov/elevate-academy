@@ -22,14 +22,15 @@ const SidebarContainer = styled.div`
 
   @media (max-width: 768px) {
     width: 100%;
-    height: auto;
+    height: 60px;
     position: fixed;
     bottom: 0;
     top: auto;
     display: flex;
     flex-direction: row;
-    justify-content: space-around;
-    padding: 10px;
+    justify-content: space-evenly;
+    align-items: center;
+    padding: 0;
     background: linear-gradient(180deg, #870121 0%, #6b011a 100%);
     box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
     z-index: 1000;
@@ -55,7 +56,7 @@ const NavList = styled.ul`
   @media (max-width: 768px) {
     display: flex;
     width: 100%;
-    justify-content: space-around;
+    justify-content: space-evenly;
   }
 `;
 
@@ -66,7 +67,8 @@ const NavItem = styled.li`
   @media (max-width: 768px) {
     margin-bottom: 0;
     flex: 1;
-    text-align: center;
+    display: flex;
+    justify-content: center;
   }
 `;
 
@@ -144,32 +146,41 @@ const NavLinkStyled = styled(NavLink)`
 
     @media (max-width: 768px) {
       margin-right: 0;
-      font-size: 1.5rem;
+      font-size: 1.8rem;
     }
   }
 
   @media (max-width: 768px) {
-    flex-direction: column;
-    padding: 8px;
-    border-radius: 8px;
-    font-size: 0.8rem;
+    padding: 12px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, #fffbf0 0%, #f5f0e6 100%);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
     transform: none;
-    text-align: center;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 48px;
+    height: 48px;
+
+    span {
+      display: none;
+    }
 
     &.active {
-      transform: none;
+      background: linear-gradient(135deg, #ffbfbf 0%, #ffaaaa 100%);
+      transform: scale(1.1);
+      box-shadow: 0 4px 12px rgba(135, 1, 33, 0.4);
+
+      &::before,
       &::after {
         display: none;
       }
     }
 
     &:hover {
-      transform: scale(1.05);
-    }
-
-    span {
-      display: block;
-      margin-top: 4px;
+      transform: scale(1.1);
+      background: linear-gradient(135deg, #ffffff 0%, #f9f5ec 100%);
+      box-shadow: 0 4px 12px rgba(135, 1, 33, 0.3);
     }
   }
 `;
