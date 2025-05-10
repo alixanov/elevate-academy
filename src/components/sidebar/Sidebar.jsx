@@ -23,8 +23,16 @@ const SidebarContainer = styled.div`
   @media (max-width: 768px) {
     width: 100%;
     height: auto;
-    position: relative;
-    box-shadow: none;
+    position: fixed;
+    bottom: 0;
+    top: auto;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    padding: 10px;
+    background: linear-gradient(180deg, #870121 0%, #6b011a 100%);
+    box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000;
   }
 `;
 
@@ -34,16 +42,32 @@ const Logo = styled.div`
   color: #fffbf0;
   margin-bottom: 30px;
   text-align: center;
+
+  @media (max-width: 768px) {
+    display: none;
+  }
 `;
 
 const NavList = styled.ul`
   list-style: none;
   padding: 0;
+
+  @media (max-width: 768px) {
+    display: flex;
+    width: 100%;
+    justify-content: space-around;
+  }
 `;
 
 const NavItem = styled.li`
   margin-bottom: 12px;
   position: relative;
+
+  @media (max-width: 768px) {
+    margin-bottom: 0;
+    flex: 1;
+    text-align: center;
+  }
 `;
 
 const NavLinkStyled = styled(NavLink)`
@@ -54,7 +78,7 @@ const NavLinkStyled = styled(NavLink)`
   text-decoration: none;
   font-size: 1rem;
   font-weight: 500;
-  border-radius: 12px 8px 8px 12px; /* Asymmetrical corners for subtle creativity */
+  border-radius: 12px 8px 8px 12px;
   background: linear-gradient(135deg, #fffbf0 0%, #f5f0e6 100%);
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
   transition: all 0.4s ease-in-out;
@@ -117,32 +141,66 @@ const NavLinkStyled = styled(NavLink)`
     margin-right: 12px;
     font-size: 1.2rem;
     transition: color 0.4s ease-in-out;
+
+    @media (max-width: 768px) {
+      margin-right: 0;
+      font-size: 1.5rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    flex-direction: column;
+    padding: 8px;
+    border-radius: 8px;
+    font-size: 0.8rem;
+    transform: none;
+    text-align: center;
+
+    &.active {
+      transform: none;
+      &::after {
+        display: none;
+      }
+    }
+
+    &:hover {
+      transform: scale(1.05);
+    }
+
+    span {
+      display: block;
+      margin-top: 4px;
+    }
   }
 `;
 
 const Sidebar = () => {
   return (
     <SidebarContainer>
-      <Logo>Learning Center</Logo>
+      <Logo>Elevate Akademiyasi</Logo>
       <NavList>
         <NavItem>
-          <NavLinkStyled to="/" aria-label="Home">
-            <HomeFilledIcon /> Home
+          <NavLinkStyled to="/" aria-label="Bosh Sahifa">
+            <HomeFilledIcon />
+            <span>Bosh Sahifa</span>
           </NavLinkStyled>
         </NavItem>
         <NavItem>
-          <NavLinkStyled to="/courses" aria-label="Courses">
-            <SchoolIcon /> Courses
+          <NavLinkStyled to="/courses" aria-label="Kurslar">
+            <SchoolIcon />
+            <span>Kurslar</span>
           </NavLinkStyled>
         </NavItem>
         <NavItem>
-          <NavLinkStyled to="/events" aria-label="Events">
-            <EventIcon /> Events
+          <NavLinkStyled to="/events" aria-label="Tadbirlar">
+            <EventIcon />
+            <span>Tadbirlar</span>
           </NavLinkStyled>
         </NavItem>
         <NavItem>
-          <NavLinkStyled to="/profile" aria-label="Profile">
-            <PersonIcon /> Profile
+          <NavLinkStyled to="/profile" aria-label="Profil">
+            <PersonIcon />
+            <span>Profil</span>
           </NavLinkStyled>
         </NavItem>
       </NavList>
