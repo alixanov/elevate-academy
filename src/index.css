@@ -12,7 +12,7 @@ body {
   height: 100vh;
   display: flex;
   justify-content: center;
-  background: linear-gradient(135deg, #f8f9fa 70%, #fff0f2 100%);  /* Light background to complement primary color */
+  background: linear-gradient(135deg,#040b1f 70%, #040b1f 100%);  /* Light background to complement primary color */
 }
 
 #root {
