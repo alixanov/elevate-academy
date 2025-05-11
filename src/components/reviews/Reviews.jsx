@@ -162,7 +162,7 @@ const StudentName = styled.p`
 `;
 
 const FeedbackFormSection = styled.section`
-  background: #1a2b5f;
+  background: #fff;
   padding: 50px 20px;
   width: 100%;
   text-align: center;
@@ -175,7 +175,7 @@ const FeedbackFormSection = styled.section`
 const FormTitle = styled.h2`
   font-size: 2rem;
   font-weight: 600;
-  color: #e6e9f0;
+  color: #040b1f;
   margin-bottom: 25px;
 
   @media (max-width: 768px) {
@@ -195,10 +195,10 @@ const FeedbackForm = styled.form`
 const Input = styled.input`
   padding: 10px;
   font-size: 0.95rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid #040b1f;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.1);
-  color: #e6e9f0;
+  color: #040b1f;
   outline: none;
   transition: border-color 0.3s ease, background 0.3s ease;
 
@@ -208,11 +208,11 @@ const Input = styled.input`
   }
 
   &::placeholder {
-    color: #a0a8c0;
+    color: #040b1f;
   }
 
   @media (max-width: 768px) {
-    font-size: 0.9rem;
+    font-size: 0.9rem;  
     padding: 8px;
   }
 `;
@@ -220,13 +220,13 @@ const Input = styled.input`
 const Textarea = styled.textarea`
   padding: 10px;
   font-size: 0.95rem;
-  border: 1px solid rgba(255, 255, 255, 0.2);
+  border: 1px solid  #040b1f;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.1);
-  color: #e6e9f0;
+  color: #040b1f;
   outline: none;
   resize: vertical;
-  min-height: 100px;
+  max-height: 150px;
   transition: border-color 0.3s ease, background 0.3s ease;
 
   &:focus {
@@ -235,7 +235,7 @@ const Textarea = styled.textarea`
   }
 
   &::placeholder {
-    color: #a0a8c0;
+    color:rgb(0, 6, 23);
   }
 
   @media (max-width: 768px) {

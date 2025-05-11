@@ -12,7 +12,7 @@ const HeaderContainer = styled.div`
   position: relative;
   overflow-x: hidden; /* Предотвращаем горизонтальный скролл */
   box-sizing: border-box;
-  background: #040b1f;
+  background: #fff;
 
   @media (max-width: 768px) {
     flex-direction: column;
@@ -39,7 +39,7 @@ const TxtCourseLearning = styled.div`
 const Title = styled.h1`
   font-size: 2.4rem;
   font-weight: 600;
-  color: #e6e9f0;
+  color: #040b1f;
   margin-bottom: 15px;
   line-height: 1.2;
   position: relative;
@@ -78,7 +78,7 @@ const Title = styled.h1`
 const Description = styled.p`
   font-size: 1.1rem;
   font-weight: 400;
-  color: #e6e9f0;
+  color: #040b1f;
   line-height: 1.6;
   margin-bottom: 15px;
   width: 100%;

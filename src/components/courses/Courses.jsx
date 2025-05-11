@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { Link } from 'react-router-dom';
 
 const CoursesSection = styled.section`
-  background: #040b1f;
+  background: #fff;
   padding: 60px 20px;
   width: 100%;
   box-sizing: border-box;
@@ -16,7 +16,7 @@ const CoursesSection = styled.section`
 const SectionTitle = styled.h2`
   font-size: 2.8rem;
   font-weight: 600;
-  color: #e6e9f0;
+  color: #040b1f;
   text-align: center;
   margin-bottom: 40px;
   position: relative;
@@ -53,7 +53,7 @@ const CourseList = styled.div`
 `;
 
 const CourseItem = styled.div`
-  background: #1a2b5f;
+  background: #040b1f;
   border-radius: 12px;
   padding: 20px;
   text-align: center;
