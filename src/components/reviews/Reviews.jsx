@@ -332,7 +332,7 @@ const Reviews = () => {
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const response = await fetch('https://orzu-academy-server.vercel.app/reviews');
+        const response = await fetch('https://orzu-academy-backend.vercel.app/reviews');
         if (!response.ok) throw new Error('Fikrlarni yuklashda xato');
         const data = await response.json();
         setReviews(data);
@@ -376,7 +376,7 @@ const Reviews = () => {
       setIsSubmitting(true);
       try {
         const token = localStorage.getItem('token'); // Опционально, если нужна авторизация
-        const response = await fetch('https://orzu-academy-server.vercel.app/reviews', {
+        const response = await fetch('https://orzu-academy-backend.vercel.app/reviews', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -486,5 +486,4 @@ const Reviews = () => {
     </div>
   );
 };
-
 export default Reviews;

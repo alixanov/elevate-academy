@@ -181,7 +181,7 @@ const Cabinet = () => {
       }
 
       try {
-        const response = await fetch('https://orzu-academy-server.vercel.app/me', {
+        const response = await fetch('https://orzu-academy-backend.vercel.app/me', {
           headers: { Authorization: `Bearer ${token}` },
         });
         const data = await response.json();

@@ -3,6 +3,7 @@ import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import { Link, useNavigate } from 'react-router-dom';
 import { HomeOutlined, EmailOutlined, PersonOutline, LockOutlined } from '@mui/icons-material';
+import axios from 'axios';
 
 const AuthSection = styled.section`
   background: linear-gradient(180deg, #040b1f, #0a1a3d);
@@ -242,7 +243,7 @@ const Auth = () => {
   const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
 
-  const API_URL = process.env.REACT_APP_API_URL || 'https://orzu-academy-server.vercel.app';
+  const API_URL = process.env.REACT_APP_API_URL || 'https://orzu-academy-backend.vercel.app';
 
   const handleSwitch = useCallback(() => {
     setIsRegister((prev) => !prev);
@@ -290,6 +291,19 @@ const Auth = () => {
     return isValid;
   }, [formData, isRegister]);
 
+  const axiosWithRetry = async (config, retries = 3) => {
+    for (let i = 0; i < retries; i++) {
+      try {
+        const response = await axios(config);
+        return response;
+      } catch (error) {
+        console.error(`Attempt ${i + 1} failed:`, error);
+        if (i === retries - 1) throw error;
+        await new Promise((resolve) => setTimeout(resolve, 1000 * (i + 1)));
+      }
+    }
+  };
+
   const handleSubmit = useCallback(
     async (e) => {
       e.preventDefault();
@@ -304,22 +318,19 @@ const Auth = () => {
           console.log('Sending request to:', `${API_URL}${endpoint}`);
           console.log('Payload:', payload);
 
-          const response = await fetch(`${API_URL}${endpoint}`, {
+          const response = await axiosWithRetry({
             method: 'POST',
+            url: `${API_URL}${endpoint}`,
             headers: {
               'Content-Type': 'application/json',
               'Accept': 'application/json',
             },
-            body: JSON.stringify(payload),
+            data: payload,
           });
 
-          const data = await response.json();
+          const data = response.data;
 
           console.log('Response:', data);
-
-          if (!response.ok) {
-            throw new Error(data.error || 'Server xatosi, iltimos keyinroq urinib ko‘ring');
-          }
 
           setSuccessMessage(
             isRegister
@@ -336,9 +347,15 @@ const Auth = () => {
           }
         } catch (error) {
           console.error('Auth error:', error);
+          let errorMessage = 'Server xatosi, iltimos keyinroq urinib ko‘ring.';
+          if (error.response) {
+            errorMessage = error.response.data.error || errorMessage;
+          } else if (error.request) {
+            errorMessage = 'Tarmoq xatosi yoki server javob bermadi. Iltimos, keyinroq urinib ko‘ring.';
+          }
           setErrors((prev) => ({
             ...prev,
-            server: error.message,
+            server: errorMessage,
           }));
         } finally {
           setIsSubmitting(false);
