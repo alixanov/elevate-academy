@@ -160,24 +160,24 @@ const CTAButton = styled.button`
 const Home = () => {
   return (
 
-      <HomeContainer>
-        <TextSection>
-          <Title>
-            <span>Orzu Academy</span> O‘quv Markaziga Xush Kelibsiz
-          </Title>
-          <Description>
-            <span>
-              <MenuBookIcon /> Bizning markazimiz bilim olish uchun eng yaxshi joy.
-            </span>
-            <span>
-              <SchoolIcon /> Tajribali ustozlar va qulay sharoitlar bilan sifatli ta'lim oling.
-            </span>
-            <span>Biz bilan o‘z kelajagingizni yarating! Eng yaxshi o‘qituvchilar va zamonaviy kurslar bilan ta’lim oling.</span>
-          </Description>
-          <CTAButton>Batafsil ma'lumot</CTAButton>
-        </TextSection>
-      </HomeContainer>
-   
+    <HomeContainer>
+      <TextSection>
+        <Title>
+          <span>Orzu Academy</span> O‘quv Markaziga Xush Kelibsiz
+        </Title>
+        <Description>
+          <span>
+            <MenuBookIcon /> Bizning markazimiz bilim olish uchun eng yaxshi joy.
+          </span>
+          <span>
+            <SchoolIcon /> Tajribali ustozlar va qulay sharoitlar bilan sifatli ta'lim oling.
+          </span>
+          <span>Biz bilan o‘z kelajagingizni yarating! Eng yaxshi o‘qituvchilar va zamonaviy kurslar bilan ta’lim oling.</span>
+        </Description>
+        <CTAButton>Batafsil ma'lumot</CTAButton>
+      </TextSection>
+    </HomeContainer>
+
   );
 };
 

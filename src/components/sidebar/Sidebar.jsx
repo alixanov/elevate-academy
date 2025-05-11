@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import styled from 'styled-components';
 import { Link, useLocation } from 'react-router-dom';
 import HomeFilledIcon from '@mui/icons-material/HomeFilled';
@@ -193,22 +193,41 @@ const Navbar = () => {
   const { pathname } = useLocation();
   const isHomePage = pathname === '/';
 
-  const handleContactClick = (action) => {
+  const handleContactClick = useCallback((action) => {
     if (action.startsWith('mailto:') || action.startsWith('tel:')) {
       window.location.href = action;
     } else {
       window.open(action, '_blank');
     }
-  };
+  }, []);
 
-  const handleNavClick = (id) => {
+  const handleNavClick = useCallback((id) => {
     if (isHomePage) {
       const element = document.getElementById(id);
       if (element) {
+        // Добавляем scrollMarginTop для учета высоты Navbar
+        element.style.scrollMarginTop = '90px';
+        // Добавляем временный класс для margin-bottom
+        element.classList.add('temp-margin-bottom');
         element.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        // Удаляем margin-bottom через 1 секунду
+        setTimeout(() => {
+          element.classList.remove('temp-margin-bottom');
+          element.style.scrollMarginTop = '';
+        }, 1000);
       }
     }
-  };
+  }, [isHomePage]);
+
+  // Динамический стиль для временного margin-bottom
+  const styleSheet = document.createElement('style');
+  styleSheet.innerText = `
+    .temp-margin-bottom {
+      margin-bottom: 5px;
+      transition: margin-bottom 0.3s ease;
+    }
+  `;
+  document.head.appendChild(styleSheet);
 
   return (
     <NavbarContainer>
@@ -251,14 +270,11 @@ const Navbar = () => {
             <i className="fab fa-youtube"></i> YouTube
           </ContactButton>
         </ContactBar>
-        <HeaderContent>
-          <h1>Orzularingiz sari imkoniyatlar yaratish uchun xush kelibsiz!</h1>
-        </HeaderContent>
         <NavList>
           <NavItem>
             <NavLinkStyled
-              to={isHomePage ? '#home' : '/#home'}
-              onClick={() => handleNavClick('home')}
+              to={isHomePage ? '/#home' : '/'}
+              onClick={() => handleNavClick('header')}
               aria-label="Bosh Sahifa"
             >
               <HomeFilledIcon />
@@ -267,7 +283,7 @@ const Navbar = () => {
           </NavItem>
           <NavItem>
             <NavLinkStyled
-              to={isHomePage ? '#courses' : '/courses'}
+              to={isHomePage ? '/#courses' : '/courses'}
               onClick={() => handleNavClick('courses')}
               aria-label="Kurslar"
             >
@@ -277,7 +293,7 @@ const Navbar = () => {
           </NavItem>
           <NavItem>
             <NavLinkStyled
-              to={isHomePage ? '#teachers-section' : '/teachers-section'}
+              to={isHomePage ? '/#teachers-section' : '/teachers-section'}
               onClick={() => handleNavClick('teachers-section')}
               aria-label="O‘qituvchilar"
             >
@@ -287,7 +303,7 @@ const Navbar = () => {
           </NavItem>
           <NavItem>
             <NavLinkStyled
-              to={isHomePage ? '#feedback' : '/feedback'}
+              to={isHomePage ? '/#feedback' : '/feedback'}
               onClick={() => handleNavClick('feedback')}
               aria-label="Fikrlaringiz"
             >

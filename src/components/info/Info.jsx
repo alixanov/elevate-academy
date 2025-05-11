@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useParams, Link } from 'react-router-dom';
+import { motion, AnimatePresence } from 'framer-motion';
 
 const InfoSection = styled.section`
   background: #f7f9fc;
@@ -116,15 +117,15 @@ const ButtonContainer = styled.div`
   gap: 10px;
 `;
 
-const PaymentButton = styled(Link)`
-  display: inline-block;
+const PaymentButton = styled.button`
   padding: 12px 24px;
   font-size: 1rem;
   font-weight: 600;
   color: #040b1f;
   background: linear-gradient(90deg, #ffcc00, #ffd700);
   border-radius: 8px;
-  text-decoration: none;
+  border: none;
+  cursor: pointer;
   transition: all 0.3s ease;
 
   &:hover {
@@ -157,6 +158,149 @@ const BackButton = styled(Link)`
   @media (max-width: 768px) {
     padding: 10px 20px;
     font-size: 0.9rem;
+  }
+`;
+
+const ModalOverlay = styled(motion.div)`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(4, 11, 31, 0.7);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+`;
+
+const ModalContent = styled(motion.div)`
+  background: #1a2b5f;
+  padding: 30px;
+  border-radius: 12px;
+  max-width: 500px;
+  width: 90%;
+  color: #e6e9f0;
+  text-align: center;
+  position: relative;
+
+  @media (max-width: 768px) {
+    padding: 20px;
+  }
+`;
+
+const ModalTitle = styled.h3`
+  font-size: 1.8rem;
+  font-weight: 600;
+  margin-bottom: 20px;
+
+  @media (max-width: 768px) {
+    font-size: 1.5rem;
+  }
+`;
+
+const ModalForm = styled.form`
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+`;
+
+const ModalInput = styled.input`
+  padding: 10px;
+  font-size: 1rem;
+  border: 1px solid #e6e9f0;
+  border-radius: 8px;
+  background: #ffffff;
+  color: #040b1f;
+  outline: none;
+  transition: border-color 0.3s ease;
+
+  &:focus {
+    border-color: #ffcc00;
+  }
+
+  &::placeholder {
+    color: #555;
+  }
+
+  &[type='text']:invalid {
+    border-color: #ff4d4d;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+    padding: 8px;
+  }
+`;
+
+const ModalLabel = styled.label`
+  font-size: 1rem;
+  color: #e6e9f0;
+  text-align: left;
+  margin-bottom: 5px;
+
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+  }
+`;
+
+const ModalAmount = styled.p`
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: #ffcc00;
+  margin: 10px 0;
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
+`;
+
+const ModalButton = styled.button`
+  padding: 12px 24px;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #040b1f;
+  background: linear-gradient(90deg, #ffcc00, #ffd700);
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(4, 11, 31, 0.3);
+  }
+
+  &:disabled {
+    background: #ccc;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+
+  @media (max-width: 768px) {
+    padding: 10px 20px;
+    font-size: 0.9rem;
+  }
+`;
+
+const SuccessMessage = styled.p`
+  font-size: 1rem;
+  color: #ffcc00;
+  margin-top: 15px;
+
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+  }
+`;
+
+const ErrorMessage = styled.p`
+  font-size: 0.9rem;
+  color: #ff4d4d;
+  margin-top: 5px;
+
+  @media (max-width: 768px) {
+    font-size: 0.8rem;
   }
 `;
 
@@ -301,6 +445,84 @@ const coursesData = [
 const Info = () => {
   const { courseId } = useParams();
   const course = coursesData.find((c) => c.id === courseId);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [cardNumber, setCardNumber] = useState('');
+  const [expiryDate, setExpiryDate] = useState('');
+  const [errors, setErrors] = useState({ cardNumber: '', expiryDate: '' });
+  const [isPaid, setIsPaid] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const openModal = () => setIsModalOpen(true);
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setCardNumber('');
+    setExpiryDate('');
+    setErrors({ cardNumber: '', expiryDate: '' });
+    setIsPaid(false);
+    setIsSubmitting(false);
+  };
+
+  const validateForm = () => {
+    let isValid = true;
+    const newErrors = { cardNumber: '', expiryDate: '' };
+
+    // Валидация номера карты
+    const cardNumberClean = cardNumber.replace(/\s/g, '');
+    if (!/^\d{16}$/.test(cardNumberClean)) {
+      newErrors.cardNumber = 'Karta raqami 16 raqamdan iborat bo‘lishi kerak';
+      isValid = false;
+    }
+
+    // Валидация срока действия
+    if (!/^\d{2}\/\d{2}$/.test(expiryDate)) {
+      newErrors.expiryDate = 'Amal qilish muddati MM/YY formatida bo‘lishi kerak';
+      isValid = false;
+    } else {
+      const [month, year] = expiryDate.split('/');
+      const monthNum = parseInt(month, 10);
+      const yearNum = parseInt(year, 10);
+      const currentYear = new Date().getFullYear() % 100; // Последние 2 цифры года
+      if (monthNum < 1 || monthNum > 12) {
+        newErrors.expiryDate = 'Oy 01-12 oralig‘ida bo‘lishi kerak';
+        isValid = false;
+      } else if (yearNum < currentYear || yearNum > currentYear + 10) {
+        newErrors.expiryDate = 'Yil hozirgi yildan 10 yil ichida bo‘lishi kerak';
+        isValid = false;
+      }
+    }
+
+    setErrors(newErrors);
+    return isValid;
+  };
+
+  const handleCardNumberChange = (e) => {
+    let value = e.target.value.replace(/\D/g, ''); // Только цифры
+    value = value.slice(0, 16); // Ограничение до 16 цифр
+    value = value.replace(/(\d{4})(?=\d)/g, '$1 '); // Пробелы после каждых 4 цифр
+    setCardNumber(value);
+    setErrors((prev) => ({ ...prev, cardNumber: '' }));
+  };
+
+  const handleExpiryDateChange = (e) => {
+    let value = e.target.value.replace(/\D/g, ''); // Только цифры
+    value = value.slice(0, 4); // Ограничение до 4 цифр
+    if (value.length > 2) {
+      value = `${value.slice(0, 2)}/${value.slice(2)}`; // Добавление слэша
+    }
+    setExpiryDate(value);
+    setErrors((prev) => ({ ...prev, expiryDate: '' }));
+  };
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (validateForm()) {
+      setIsSubmitting(true);
+      setTimeout(() => {
+        setIsSubmitting(false);
+        setIsPaid(true);
+      }, 1000); // Имитация запроса
+    }
+  };
 
   if (!course) {
     return (
@@ -335,11 +557,76 @@ const Info = () => {
             <p><strong>Narx:</strong> {course.price}</p>
           </CourseDetails>
           <ButtonContainer>
-            <PaymentButton to="/payment">To‘lov qilish</PaymentButton>
+            <PaymentButton onClick={openModal}>To‘lov qilish</PaymentButton>
             <BackButton to="/courses">Orqaga</BackButton>
           </ButtonContainer>
         </RightColumn>
       </InfoContainer>
+
+      <AnimatePresence>
+        {isModalOpen && (
+          <ModalOverlay
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3 }}
+            onClick={closeModal}
+          >
+            <ModalContent
+              initial={{ scale: 0.8, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.8, opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              onClick={(e) => e.stopPropagation()}
+            >
+              <ModalTitle>{isPaid ? 'To‘lov muvaffaqiyatli!' : 'To‘lov qilish'}</ModalTitle>
+              {!isPaid ? (
+                <>
+                  <ModalAmount>To‘lov summasi: {course.price}</ModalAmount>
+                  <ModalForm onSubmit={handleSubmit}>
+                    <div>
+                      <ModalLabel htmlFor="cardNumber">Karta raqami</ModalLabel>
+                      <ModalInput
+                        type="text"
+                        id="cardNumber"
+                        placeholder="1234 5678 9012 3456"
+                        value={cardNumber}
+                        onChange={handleCardNumberChange}
+                        maxLength={19} // 16 цифр + 3 пробела
+                        required
+                      />
+                      {errors.cardNumber && <ErrorMessage>{errors.cardNumber}</ErrorMessage>}
+                    </div>
+                    <div>
+                      <ModalLabel htmlFor="expiryDate">Amal qilish muddati (MM/YY)</ModalLabel>
+                      <ModalInput
+                        type="text"
+                        id="expiryDate"
+                        placeholder="MM/YY"
+                        value={expiryDate}
+                        onChange={handleExpiryDateChange}
+                        maxLength={5} // 4 цифры + слэш
+                        required
+                      />
+                      {errors.expiryDate && <ErrorMessage>{errors.expiryDate}</ErrorMessage>}
+                    </div>
+                    <ModalButton type="submit" disabled={isSubmitting}>
+                      {isSubmitting ? 'Yuborilmoqda...' : 'Oplatit'}
+                    </ModalButton>
+                  </ModalForm>
+                </>
+              ) : (
+                <>
+                  <SuccessMessage>
+                    Siz {course.price} summasini muvaffaqiyatli to‘ladingiz!
+                  </SuccessMessage>
+                  <ModalButton onClick={closeModal}>Yopish</ModalButton>
+                </>
+              )}
+            </ModalContent>
+          </ModalOverlay>
+        )}
+      </AnimatePresence>
     </InfoSection>
   );
 };

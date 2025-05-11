@@ -5,6 +5,7 @@ import Header from '../header/Header';
 import Courses from '../courses/Courses';
 import Home from '../home/Home';
 import Teacher from '../teacher/Teacher';
+import Reviews from '../reviews/Reviews';
 
 const MainContainer = styled.div`
   display: flex;
@@ -30,10 +31,11 @@ const Main = () => {
 
   return (
     <MainContainer>
-      <Main id="home" />
+      <Home id="home" />
       <Header id="header" />
       <Courses id="courses" />
       <Teacher id="teachers-section" />
+      <Reviews id="feadback" />
     </MainContainer>
   );
 };

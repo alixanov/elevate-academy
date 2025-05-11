@@ -20,10 +20,10 @@ const ReviewsSection = styled.section`
 `;
 
 const SectionTitle = styled.h2`
-  font-size: 2.8rem;
+  font-size: 2.5rem;
   font-weight: 600;
   color: #e6e9f0;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
   position: relative;
 
   &::after {
@@ -32,119 +32,11 @@ const SectionTitle = styled.h2`
     bottom: -8px;
     left: 50%;
     transform: translateX(-50%);
-    width: 60px;
+    width: 50px;
     height: 3px;
     background: linear-gradient(90deg, #ffcc00, #ffd700);
     border-radius: 2px;
   }
-
-  @media (max-width: 768px) {
-    font-size: 2rem;
-    margin-bottom: 30px;
-  }
-`;
-
-const SwiperContainer = styled.div`
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 20px;
-
-  .swiper {
-    padding-bottom: 40px;
-  }
-
-  .swiper-slide {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-
-  .swiper-pagination-bullet {
-    background: #ffcc00;
-    opacity: 0.5;
-  }
-
-  .swiper-pagination-bullet-active {
-    background: #ffd700;
-    opacity: 1;
-  }
-
-  .swiper-button-next,
-  .swiper-button-prev {
-    color: #ffcc00;
-    transition: color 0.3s ease;
-
-    &:hover {
-      color: #ffd700;
-    }
-
-    @media (max-width: 768px) {
-      display: none;
-    }
-  }
-`;
-
-const FeedbackCard = styled.div`
-  background: #1a2b5f;
-  border-radius: 12px;
-  padding: 20px;
-  width: 100%;
-  max-width: 360px;
-  text-align: center;
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: 2px solid transparent;
-
-  &:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
-    border: 2px solid #ffcc00;
-  }
-
-  @media (max-width: 768px) {
-    padding: 15px;
-    max-width: 300px;
-  }
-`;
-
-const FeedbackText = styled.p`
-  font-size: 1rem;
-  color: #e6e9f0;
-  line-height: 1.6;
-  margin-bottom: 15px;
-  font-style: italic;
-
-  @media (max-width: 768px) {
-    font-size: 0.9rem;
-  }
-`;
-
-const StudentName = styled.p`
-  font-size: 1rem;
-  font-weight: 600;
-  color: #ffcc00;
-  margin: 0;
-
-  @media (max-width: 768px) {
-    font-size: 0.9rem;
-  }
-`;
-
-const FeedbackFormSection = styled.section`
-  background: #1a2b5f;
-  padding: 60px 20px;
-  width: 100%;
-  text-align: center;
-
-  @media (max-width: 768px) {
-    padding: 40px 10px;
-  }
-`;
-
-const FormTitle = styled.h2`
-  font-size: 2.2rem;
-  font-weight: 600;
-  color: #e6e9f0;
-  margin-bottom: 30px;
 
   @media (max-width: 768px) {
     font-size: 1.8rem;
@@ -152,67 +44,209 @@ const FormTitle = styled.h2`
   }
 `;
 
+const SwiperContainer = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+
+  .swiper {
+    padding: 20px 0 50px 0;
+  }
+
+  .swiper-slide {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    height: auto;
+  }
+
+  .swiper-pagination {
+    bottom: 10px;
+  }
+
+  .swiper-pagination-bullet {
+    background: #ffcc00;
+    opacity: 0.7;
+    width: 8px;
+    height: 8px;
+    transition: all 0.3s ease;
+  }
+
+  .swiper-pagination-bullet-active {
+    background: #ffd700;
+    opacity: 1;
+    transform: scale(1.2);
+  }
+
+  .swiper-button-next,
+  .swiper-button-prev {
+    color: #ffcc00;
+    transition: color 0.3s ease, transform 0.3s ease;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 32px;
+    height: 32px;
+
+    &:hover {
+      color: #ffd700;
+      transform: translateY(-50%) scale(1.1);
+    }
+
+    @media (max-width: 768px) {
+      display: none;
+    }
+  }
+
+  .swiper-button-next::after,
+  .swiper-button-prev::after {
+    font-size: 20px;
+  }
+`;
+
+const FeedbackCard = styled.div`
+  background: linear-gradient(135deg, rgba(26, 43, 95, 0.9), rgba(26, 43, 95, 0.7));
+  backdrop-filter: blur(8px);
+  border-radius: 16px;
+  padding: 20px;
+  width: 100%;
+  max-width: 340px;
+  min-height: 150px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: center;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-sizing: border-box;
+
+  &:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 20px rgba(255, 204, 0, 0.2);
+  }
+
+  @media (max-width: 768px) {
+    padding: 15px;
+    max-width: 280px;
+    min-height: 140px;
+  }
+`;
+
+const FeedbackText = styled.p`
+  font-size: 1.1rem;
+  color: #e6e9f0;
+  line-height: 1.5;
+  margin-bottom: 12px;
+  font-style: normal;
+  flex-grow: 1;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  @media (max-width: 768px) {
+    font-size: 0.95rem;
+    -webkit-line-clamp: 3;
+  }
+`;
+
+const StudentName = styled.p`
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #ffcc00;
+  margin: 0;
+
+  @media (max-width: 768px) {
+    font-size: 0.85rem;
+  }
+`;
+
+const FeedbackFormSection = styled.section`
+  background: #1a2b5f;
+  padding: 50px 20px;
+  width: 100%;
+  text-align: center;
+
+  @media (max-width: 768px) {
+    padding: 30px 10px;
+  }
+`;
+
+const FormTitle = styled.h2`
+  font-size: 2rem;
+  font-weight: 600;
+  color: #e6e9f0;
+  margin-bottom: 25px;
+
+  @media (max-width: 768px) {
+    font-size: 1.6rem;
+    margin-bottom: 15px;
+  }
+`;
+
 const FeedbackForm = styled.form`
-  max-width: 600px;
+  max-width: 500px;
   margin: 0 auto;
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 12px;
 `;
 
 const Input = styled.input`
-  padding: 12px;
-  font-size: 1rem;
-  border: 2px solid #e6e9f0;
+  padding: 10px;
+  font-size: 0.95rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
-  background: #ffffff;
-  color: #040b1f;
+  background: rgba(255, 255, 255, 0.1);
+  color: #e6e9f0;
   outline: none;
-  transition: border-color 0.3s ease;
+  transition: border-color 0.3s ease, background 0.3s ease;
 
   &:focus {
     border-color: #ffcc00;
+    background: rgba(255, 255, 255, 0.15);
   }
 
   &::placeholder {
-    color: #555;
+    color: #a0a8c0;
   }
 
   @media (max-width: 768px) {
     font-size: 0.9rem;
-    padding: 10px;
+    padding: 8px;
   }
 `;
 
 const Textarea = styled.textarea`
-  padding: 12px;
-  font-size: 1rem;
-  border: 2px solid #e6e9f0;
+  padding: 10px;
+  font-size: 0.95rem;
+  border: 1px solid rgba(255, 255, 255, 0.2);
   border-radius: 8px;
-  background: #ffffff;
-  color: #040b1f;
+  background: rgba(255, 255, 255, 0.1);
+  color: #e6e9f0;
   outline: none;
   resize: vertical;
-  min-height: 120px;
-  transition: border-color 0.3s ease;
+  min-height: 100px;
+  transition: border-color 0.3s ease, background 0.3s ease;
 
   &:focus {
     border-color: #ffcc00;
+    background: rgba(255, 255, 255, 0.15);
   }
 
   &::placeholder {
-    color: #555;
+    color: #a0a8c0;
   }
 
   @media (max-width: 768px) {
     font-size: 0.9rem;
-    padding: 10px;
+    padding: 8px;
   }
 `;
 
 const SubmitButton = styled.button`
-  padding: 12px 24px;
-  font-size: 1rem;
+  padding: 10px 20px;
+  font-size: 0.95rem;
   font-weight: 600;
   color: #040b1f;
   background: linear-gradient(90deg, #ffcc00, #ffd700);
@@ -223,7 +257,7 @@ const SubmitButton = styled.button`
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(4, 11, 31, 0.3);
+    box-shadow: 0 4px 12px rgba(255, 204, 0, 0.3);
   }
 
   &:disabled {
@@ -235,163 +269,161 @@ const SubmitButton = styled.button`
 
   @media (max-width: 768px) {
     font-size: 0.9rem;
-    padding: 10px 20px;
+    padding: 8px 16px;
   }
 `;
 
 const SuccessMessage = styled.p`
-  font-size: 1rem;
+  font-size: 0.95rem;
   color: #ffcc00;
   margin-top: 10px;
 `;
 
 const ErrorMessage = styled.p`
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: #ff4d4d;
   margin-top: 5px;
 `;
 
 const reviewsData = [
-    {
-        text: "Orzu o‘quv markazi bilim olish uchun eng zo‘r joy!",
-        name: "Jamshidbek",
-    },
-    {
-        text: "Bu yerda o‘qib hayotim o‘zgardi!",
-        name: "Madinaxon",
-    },
-    {
-        text: "Ustozlar juda mehribon va bilimli!",
-        name: "Otabek",
-    },
-    {
-        text: "O‘quv jarayonlari juda qiziqarli va samarali!",
-        name: "Malikaxon",
-    },
-    {
-        text: "Bu markazda o‘qib hayotim yangi bosqichga chiqdi!",
-        name: "Azizbek",
-    },
-    {
-        text: "O‘quv mashg‘ulotlari juda qiziqarli",
-        name: "Ruxshona",
-    },
-    {
-        text: "Ustozlar juda bilimli!",
-        name: "Shodiya",
-    },
-    {
-        text: "Men bu o‘quv markazda o‘qib yuksaldim!",
-        name: "Nozigul",
-    },
+  {
+    text: "Orzu o‘quv markazi bilim olish uchun eng zo‘r joy!",
+    name: "Jamshidbek",
+  },
+  {
+    text: "Bu yerda o‘qib hayotim o‘zgardi!",
+    name: "Madinaxon",
+  },
+  {
+    text: "Ustozlar juda mehribon va bilimli!",
+    name: "Otabek",
+  },
+  {
+    text: "O‘quv jarayonlari juda qiziqarli va samarali!",
+    name: "Malikaxon",
+  },
+  {
+    text: "Bu markazda o‘qib hayotim yangi bosqichga chiqdi!",
+    name: "Azizbek",
+  },
+  {
+    text: "O‘quv mashg‘ulotlari juda qiziqarli",
+    name: "Ruxshona",
+  },
+  {
+    text: "Ustozlar juda bilimli!",
+    name: "Shodiya",
+  },
+  {
+    text: "Men bu o‘quv markazda o‘qib yuksaldim!",
+    name: "Nozigul",
+  },
 ];
 
 const Reviews = () => {
-    const [formData, setFormData] = useState({ name: '', feedback: '' });
-    const [errors, setErrors] = useState({ name: '', feedback: '' });
-    const [isSubmitted, setIsSubmitted] = useState(false);
-    const [isSubmitting, setIsSubmitting] = useState(false);
+  const [formData, setFormData] = useState({ name: '', feedback: '' });
+  const [errors, setErrors] = useState({ name: '', feedback: '' });
+  const [isSubmitted, setIsSubmitted] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-    const handleInputChange = (e) => {
-        const { id, value } = e.target;
-        setFormData((prev) => ({ ...prev, [id]: value }));
-        setErrors((prev) => ({ ...prev, [id]: '' }));
-        setIsSubmitted(false);
-    };
+  const handleInputChange = (e) => {
+    const { id, value } = e.target;
+    setFormData((prev) => ({ ...prev, [id]: value }));
+    setErrors((prev) => ({ ...prev, [id]: '' }));
+    setIsSubmitted(false);
+  };
 
-    const validateForm = () => {
-        let isValid = true;
-        const newErrors = { name: '', feedback: '' };
+  const validateForm = () => {
+    let isValid = true;
+    const newErrors = { name: '', feedback: '' };
 
-        if (!formData.name.trim()) {
-            newErrors.name = "Ismingizni kiriting";
-            isValid = false;
-        }
-        if (!formData.feedback.trim()) {
-            newErrors.feedback = "Fikringizni yozing";
-            isValid = false;
-        }
+    if (!formData.name.trim()) {
+      newErrors.name = "Ismingizni kiriting";
+      isValid = false;
+    }
+    if (!formData.feedback.trim()) {
+      newErrors.feedback = "Fikringizni yozing";
+      isValid = false;
+    }
 
-        setErrors(newErrors);
-        return isValid;
-    };
+    setErrors(newErrors);
+    return isValid;
+  };
 
-    const handleSubmit = (e) => {
-        e.preventDefault();
-        if (validateForm()) {
-            setIsSubmitting(true);
-            // Имитация отправки на сервер
-            setTimeout(() => {
-                setIsSubmitting(false);
-                setIsSubmitted(true);
-                setFormData({ name: '', feedback: '' });
-                // Здесь можно добавить реальную отправку на сервер
-            }, 1000);
-        }
-    };
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (validateForm()) {
+      setIsSubmitting(true);
+      setTimeout(() => {
+        setIsSubmitting(false);
+        setIsSubmitted(true);
+        setFormData({ name: '', feedback: '' });
+      }, 1000);
+    }
+  };
 
-    return (
-        <div>
-            <ReviewsSection id="feedback">
-                <SectionTitle>O‘quvchilarimizning Fikrlari</SectionTitle>
-                <SwiperContainer>
-                    <Swiper
-                        modules={[Navigation, Pagination, Autoplay]}
-                        spaceBetween={20}
-                        slidesPerView={3}
-                        navigation
-                        pagination={{ clickable: true }}
-                        autoplay={{ delay: 3000, disableOnInteraction: false }}
-                        breakpoints={{
-                            320: { slidesPerView: 1 },
-                            768: { slidesPerView: 2 },
-                            1024: { slidesPerView: 3 },
-                        }}
-                    >
-                        {reviewsData.map((review, index) => (
-                            <SwiperSlide key={index}>
-                                <FeedbackCard>
-                                    <FeedbackText>"{review.text}"</FeedbackText>
-                                    <StudentName>– {review.name}</StudentName>
-                                </FeedbackCard>
-                            </SwiperSlide>
-                        ))}
-                    </Swiper>
-                </SwiperContainer>
-            </ReviewsSection>
+  return (
+    <div>
+      <ReviewsSection id="feedback">
+        <SectionTitle>O‘quvchilarimizning Fikrlari</SectionTitle>
+        <SwiperContainer>
+          <Swiper
+            modules={[Navigation, Pagination, Autoplay]}
+            spaceBetween={10}
+            slidesPerView={3}
+            navigation
+            pagination={{ clickable: true }}
+            autoplay={{ delay: 4000, disableOnInteraction: false }}
+            breakpoints={{
+              320: { slidesPerView: 1 },
+              768: { slidesPerView: 2 },
+              1024: { slidesPerView: 3 },
+            }}
+          >
+            {reviewsData.map((review, index) => (
+              <SwiperSlide key={index}>
+                <FeedbackCard>
+                  <FeedbackText>"{review.text}"</FeedbackText>
+                  <StudentName>– {review.name}</StudentName>
+                </FeedbackCard>
+              </SwiperSlide>
+            ))}
+          </Swiper>
+        </SwiperContainer>
+      </ReviewsSection>
 
-            <FeedbackFormSection>
-                <FormTitle>O‘quv Markazi Haqida Fikringiz</FormTitle>
-                <FeedbackForm id="feedback-form" onSubmit={handleSubmit}>
-                    <Input
-                        type="text"
-                        id="name"
-                        placeholder="Ismingiz"
-                        value={formData.name}
-                        onChange={handleInputChange}
-                        aria-label="Ismingiz"
-                        required
-                    />
-                    {errors.name && <ErrorMessage>{errors.name}</ErrorMessage>}
-                    <Textarea
-                        id="feedback"
-                        placeholder="Fikringizni yozing"
-                        value={formData.feedback}
-                        onChange={handleInputChange}
-                        aria-label="Fikringiz"
-                        required
-                    />
-                    {errors.feedback && <ErrorMessage>{errors.feedback}</ErrorMessage>}
-                    <SubmitButton type="submit" disabled={isSubmitting}>
-                        {isSubmitting ? 'Yuborilmoqda...' : 'Yuborish'}
-                    </SubmitButton>
-                    {isSubmitted && (
-                        <SuccessMessage>Fikringiz muvaffaqiyatli yuborildi!</SuccessMessage>
-                    )}
-                </FeedbackForm>
-            </FeedbackFormSection>
-        </div>
-    );
+      <FeedbackFormSection>
+        <FormTitle>O‘quv Markazi Haqida Fikringiz</FormTitle>
+        <FeedbackForm id="feedback-form" onSubmit={handleSubmit}>
+          <Input
+            type="text"
+            id="name"
+            placeholder="Ismingiz"
+            value={formData.name}
+            onChange={handleInputChange}
+            aria-label="Ismingiz"
+            required
+          />
+          {errors.name && <ErrorMessage>{errors.name}</ErrorMessage>}
+          <Textarea
+            id="feedback"
+            placeholder="Fikringizni yozing"
+            value={formData.feedback}
+            onChange={handleInputChange}
+            aria-label="Fikringiz"
+            required
+          />
+          {errors.feedback && <ErrorMessage>{errors.feedback}</ErrorMessage>}
+          <SubmitButton type="submit" disabled={isSubmitting}>
+            {isSubmitting ? 'Yuborilmoqda...' : 'Yuborish'}
+          </SubmitButton>
+          {isSubmitted && (
+            <SuccessMessage>Fikringiz muvaffaqiyatli yuborildi!</SuccessMessage>
+          )}
+        </FeedbackForm>
+      </FeedbackFormSection>
+    </div>
+  );
 };
 
 export default Reviews;
