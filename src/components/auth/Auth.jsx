@@ -236,28 +236,31 @@ const Auth = () => {
     email: '',
     login: '',
     password: '',
+    server: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
   const navigate = useNavigate();
 
+  const API_URL = process.env.REACT_APP_API_URL || 'https://orzu-academy-server.vercel.app';
+
   const handleSwitch = useCallback(() => {
     setIsRegister((prev) => !prev);
     setFormData({ email: '', login: '', password: '' });
-    setErrors({ email: '', login: '', password: '' });
+    setErrors({ email: '', login: '', password: '', server: '' });
     setSuccessMessage('');
   }, []);
 
   const handleInputChange = useCallback((e) => {
     const { id, value } = e.target;
     setFormData((prev) => ({ ...prev, [id]: value }));
-    setErrors((prev) => ({ ...prev, [id]: '' }));
+    setErrors((prev) => ({ ...prev, [id]: '', server: '' }));
     setSuccessMessage('');
   }, []);
 
   const validateForm = useCallback(() => {
     let isValid = true;
-    const newErrors = { email: '', login: '', password: '' };
+    const newErrors = { email: '', login: '', password: '', server: '' };
 
     if (isRegister && !formData.email.trim()) {
       newErrors.email = 'Email kiritilishi shart';
@@ -298,16 +301,24 @@ const Auth = () => {
             ? { email: formData.email, login: formData.login, password: formData.password }
             : { login: formData.login, password: formData.password };
 
-          const response = await fetch(`https://orzu-academy-server.vercel.app${endpoint}`, {
+          console.log('Sending request to:', `${API_URL}${endpoint}`);
+          console.log('Payload:', payload);
+
+          const response = await fetch(`${API_URL}${endpoint}`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: {
+              'Content-Type': 'application/json',
+              'Accept': 'application/json',
+            },
             body: JSON.stringify(payload),
           });
 
           const data = await response.json();
 
+          console.log('Response:', data);
+
           if (!response.ok) {
-            throw new Error(data.error || 'Server xatosi');
+            throw new Error(data.error || 'Server xatosi, iltimos keyinroq urinib ko‘ring');
           }
 
           setSuccessMessage(
@@ -324,16 +335,17 @@ const Auth = () => {
             navigate('/cabinet'); // Перенаправление в личный кабинет
           }
         } catch (error) {
+          console.error('Auth error:', error);
           setErrors((prev) => ({
             ...prev,
-            [isRegister ? 'email' : 'login']: error.message,
+            server: error.message,
           }));
         } finally {
           setIsSubmitting(false);
         }
       }
     },
-    [isRegister, formData, validateForm, navigate]
+    [isRegister, formData, validateForm, navigate, API_URL]
   );
 
   return (
@@ -400,6 +412,7 @@ const Auth = () => {
                 </InputIcon>
                 {errors.password && <ErrorMessage>{errors.password}</ErrorMessage>}
               </InputWrapper>
+              {errors.server && <ErrorMessage>{errors.server}</ErrorMessage>}
               <SubmitButton type="submit" disabled={isSubmitting}>
                 {isSubmitting ? <Spinner /> : isRegister ? 'Ro‘yxatdan o‘tish' : 'Kirish'}
               </SubmitButton>
