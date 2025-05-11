@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
@@ -195,24 +195,24 @@ const FeedbackForm = styled.form`
 const Input = styled.input`
   padding: 10px;
   font-size: 0.95rem;
-  border: 1px solid #040b1f;
+  border: 1px solid #e0e0e0;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.1);
+  background: #ffffff;
   color: #040b1f;
   outline: none;
-  transition: border-color 0.3s ease, background 0.3s ease;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 
   &:focus {
     border-color: #ffcc00;
-    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 0 3px rgba(255, 204, 0, 0.1);
   }
 
   &::placeholder {
-    color: #040b1f;
+    color: #999;
   }
 
   @media (max-width: 768px) {
-    font-size: 0.9rem;  
+    font-size: 0.9rem;
     padding: 8px;
   }
 `;
@@ -220,22 +220,22 @@ const Input = styled.input`
 const Textarea = styled.textarea`
   padding: 10px;
   font-size: 0.95rem;
-  border: 1px solid  #040b1f;
+  border: 1px solid #e0e0e0;
   border-radius: 8px;
-  background: rgba(255, 255, 255, 0.1);
+  background: #ffffff;
   color: #040b1f;
   outline: none;
   resize: vertical;
   max-height: 150px;
-  transition: border-color 0.3s ease, background 0.3s ease;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 
   &:focus {
     border-color: #ffcc00;
-    background: rgba(255, 255, 255, 0.15);
+    box-shadow: 0 0 0 3px rgba(255, 204, 0, 0.1);
   }
 
   &::placeholder {
-    color:rgb(0, 6, 23);
+    color: #999;
   }
 
   @media (max-width: 768px) {
@@ -253,7 +253,11 @@ const SubmitButton = styled.button`
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 
   &:hover {
     transform: translateY(-2px);
@@ -261,7 +265,7 @@ const SubmitButton = styled.button`
   }
 
   &:disabled {
-    background: #ccc;
+    background: #cccccc;
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
@@ -275,74 +279,90 @@ const SubmitButton = styled.button`
 
 const SuccessMessage = styled.p`
   font-size: 0.95rem;
-  color: #ffcc00;
+  color: #4caf50;
   margin-top: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  svg {
+    font-size: 1.2rem;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+  }
 `;
 
 const ErrorMessage = styled.p`
   font-size: 0.85rem;
   color: #ff4d4d;
   margin-top: 5px;
+  text-align: left;
+
+  @media (max-width: 768px) {
+    font-size: 0.8rem;
+  }
 `;
 
-const reviewsData = [
-  {
-    text: "Orzu o‘quv markazi bilim olish uchun eng zo‘r joy!",
-    name: "Jamshidbek",
-  },
-  {
-    text: "Bu yerda o‘qib hayotim o‘zgardi!",
-    name: "Madinaxon",
-  },
-  {
-    text: "Ustozlar juda mehribon va bilimli!",
-    name: "Otabek",
-  },
-  {
-    text: "O‘quv jarayonlari juda qiziqarli va samarali!",
-    name: "Malikaxon",
-  },
-  {
-    text: "Bu markazda o‘qib hayotim yangi bosqichga chiqdi!",
-    name: "Azizbek",
-  },
-  {
-    text: "O‘quv mashg‘ulotlari juda qiziqarli",
-    name: "Ruxshona",
-  },
-  {
-    text: "Ustozlar juda bilimli!",
-    name: "Shodiya",
-  },
-  {
-    text: "Men bu o‘quv markazda o‘qib yuksaldim!",
-    name: "Nozigul",
-  },
-];
+const Spinner = styled.div`
+  width: 16px;
+  height: 16px;
+  border: 2px solid #040b1f;
+  border-top: 2px solid #ffcc00;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+
+  @keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+  }
+`;
 
 const Reviews = () => {
   const [formData, setFormData] = useState({ name: '', feedback: '' });
-  const [errors, setErrors] = useState({ name: '', feedback: '' });
+  const [errors, setErrors] = useState({ name: '', feedback: '', server: '' });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [reviews, setReviews] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+
+  // Загрузка отзывов с сервера
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        const response = await fetch('https://orzu-academy-server.vercel.app/reviews');
+        if (!response.ok) throw new Error('Fikrlarni yuklashda xato');
+        const data = await response.json();
+        setReviews(data);
+      } catch (error) {
+        console.error('Error fetching reviews:', error);
+        setErrors((prev) => ({ ...prev, server: 'Fikrlarni yuklashda xato yuz berdi' }));
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchReviews();
+  }, []);
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
     setFormData((prev) => ({ ...prev, [id]: value }));
-    setErrors((prev) => ({ ...prev, [id]: '' }));
+    setErrors((prev) => ({ ...prev, [id]: '', server: '' }));
     setIsSubmitted(false);
   };
 
   const validateForm = () => {
     let isValid = true;
-    const newErrors = { name: '', feedback: '' };
+    const newErrors = { name: '', feedback: '', server: '' };
 
-    if (!formData.name.trim()) {
-      newErrors.name = "Ismingizni kiriting";
+    if (!formData.name.trim() || formData.name.trim().length < 2) {
+      newErrors.name = 'Ismingiz kamida 2 belgidan iborat bo‘lishi kerak';
       isValid = false;
     }
-    if (!formData.feedback.trim()) {
-      newErrors.feedback = "Fikringizni yozing";
+    if (!formData.feedback.trim() || formData.feedback.trim().length < 10) {
+      newErrors.feedback = 'Fikringiz kamida 10 belgidan iborat bo‘lishi kerak';
       isValid = false;
     }
 
@@ -350,15 +370,37 @@ const Reviews = () => {
     return isValid;
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
       setIsSubmitting(true);
-      setTimeout(() => {
-        setIsSubmitting(false);
+      try {
+        const token = localStorage.getItem('token'); // Опционально, если нужна авторизация
+        const response = await fetch('https://orzu-academy-server.vercel.app/reviews', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            ...(token && { Authorization: `Bearer ${token}` }),
+          },
+          body: JSON.stringify({
+            name: formData.name.trim(),
+            text: formData.feedback.trim(),
+          }),
+        });
+        if (!response.ok) {
+          const errorData = await response.json();
+          throw new Error(errorData.error || 'Fikr yuborishda xato');
+        }
+        const newReview = await response.json();
+        setReviews((prev) => [newReview, ...prev]); // Добавляем новый отзыв в начало
         setIsSubmitted(true);
         setFormData({ name: '', feedback: '' });
-      }, 1000);
+      } catch (error) {
+        console.error('Error submitting review:', error);
+        setErrors((prev) => ({ ...prev, server: error.message }));
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
 
@@ -367,28 +409,34 @@ const Reviews = () => {
       <ReviewsSection id="feedback">
         <SectionTitle>O‘quvchilarimizning Fikrlari</SectionTitle>
         <SwiperContainer>
-          <Swiper
-            modules={[Navigation, Pagination, Autoplay]}
-            spaceBetween={10}
-            slidesPerView={3}
-            navigation
-            pagination={{ clickable: true }}
-            autoplay={{ delay: 4000, disableOnInteraction: false }}
-            breakpoints={{
-              320: { slidesPerView: 1 },
-              768: { slidesPerView: 2 },
-              1024: { slidesPerView: 3 },
-            }}
-          >
-            {reviewsData.map((review, index) => (
-              <SwiperSlide key={index}>
-                <FeedbackCard>
-                  <FeedbackText>"{review.text}"</FeedbackText>
-                  <StudentName>– {review.name}</StudentName>
-                </FeedbackCard>
-              </SwiperSlide>
-            ))}
-          </Swiper>
+          {isLoading ? (
+            <p style={{ color: '#e6e9f0' }}>Fikrlar yuklanmoqda...</p>
+          ) : reviews.length === 0 ? (
+            <p style={{ color: '#e6e9f0' }}>Hozircha fikrlar yo‘q</p>
+          ) : (
+            <Swiper
+              modules={[Navigation, Pagination, Autoplay]}
+              spaceBetween={10}
+              slidesPerView={3}
+              navigation
+              pagination={{ clickable: true }}
+              autoplay={{ delay: 4000, disableOnInteraction: false }}
+              breakpoints={{
+                320: { slidesPerView: 1 },
+                768: { slidesPerView: 2 },
+                1024: { slidesPerView: 3 },
+              }}
+            >
+              {reviews.map((review) => (
+                <SwiperSlide key={review._id}>
+                  <FeedbackCard>
+                    <FeedbackText>"{review.text}"</FeedbackText>
+                    <StudentName>– {review.name}</StudentName>
+                  </FeedbackCard>
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          )}
         </SwiperContainer>
       </ReviewsSection>
 
@@ -414,11 +462,24 @@ const Reviews = () => {
             required
           />
           {errors.feedback && <ErrorMessage>{errors.feedback}</ErrorMessage>}
+          {errors.server && <ErrorMessage>{errors.server}</ErrorMessage>}
           <SubmitButton type="submit" disabled={isSubmitting}>
-            {isSubmitting ? 'Yuborilmoqda...' : 'Yuborish'}
+            {isSubmitting ? <Spinner /> : 'Yuborish'}
           </SubmitButton>
           {isSubmitted && (
-            <SuccessMessage>Fikringiz muvaffaqiyatli yuborildi!</SuccessMessage>
+            <SuccessMessage>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                viewBox="0 0 24 24"
+                fill="#4caf50"
+                width="18px"
+                height="18px"
+              >
+                <path d="M0 0h24v24H0z" fill="none" />
+                <path d="M9 16.2L4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4L9 16.2z" />
+              </svg>
+              Fikringiz muvaffaqiyatli yuborildi!
+            </SuccessMessage>
           )}
         </FeedbackForm>
       </FeedbackFormSection>

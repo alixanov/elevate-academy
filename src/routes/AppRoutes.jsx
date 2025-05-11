@@ -8,6 +8,7 @@ import Teacher from '../components/teacher/Teacher';
 import Info from '../components/info/Info';
 import Footer from '../components/footer/Footer';
 import Auth from '../components/auth/Auth';
+import Cabinet from '../components/cabinet/Cabinet';
 
 const AppContainer = styled.div`
   width: 100%;
@@ -40,6 +41,7 @@ const AppRoutes = () => {
           <Route path="/teachers-section" element={<Teacher />} />
           <Route path="/info/:courseId" element={<Info />} />
           <Route path="/register" element={<Auth />} />
+          <Route path='/cabinet' element={<Cabinet/>}/>
         </Routes>
       </MainContent>
       {!isAuthRoute && <Footer />}

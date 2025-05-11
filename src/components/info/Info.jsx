@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import styled from 'styled-components';
 import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 
 const InfoSection = styled.section`
   background: #f7f9fc;
@@ -167,7 +168,7 @@ const ModalOverlay = styled(motion.div)`
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(4, 11, 31, 0.7);
+  background: rgba(0, 0, 0, 0.5);
   display: flex;
   justify-content: center;
   align-items: center;
@@ -175,24 +176,26 @@ const ModalOverlay = styled(motion.div)`
 `;
 
 const ModalContent = styled(motion.div)`
-  background: #1a2b5f;
-  padding: 30px;
-  border-radius: 12px;
+  background: #ffffff;
+  padding: 24px;
+  border-radius: 16px;
   max-width: 500px;
   width: 90%;
-  color: #e6e9f0;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
   text-align: center;
   position: relative;
 
   @media (max-width: 768px) {
     padding: 20px;
+    border-radius: 12px;
   }
 `;
 
 const ModalTitle = styled.h3`
   font-size: 1.8rem;
-  font-weight: 600;
-  margin-bottom: 20px;
+  font-weight: 700;
+  color: #040b1f;
+  margin-bottom: 16px;
 
   @media (max-width: 768px) {
     font-size: 1.5rem;
@@ -202,45 +205,54 @@ const ModalTitle = styled.h3`
 const ModalForm = styled.form`
   display: flex;
   flex-direction: column;
-  gap: 15px;
+  gap: 16px;
+`;
+
+const ModalInputWrapper = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  text-align: left;
 `;
 
 const ModalInput = styled.input`
-  padding: 10px;
+  width: 100%;
+  padding: 10px 12px;
   font-size: 1rem;
-  border: 1px solid #e6e9f0;
+  border: 1px solid #e0e0e0;
   border-radius: 8px;
   background: #ffffff;
   color: #040b1f;
   outline: none;
-  transition: border-color 0.3s ease;
+  transition: border-color 0.3s ease, box-shadow 0.3s ease;
 
   &:focus {
     border-color: #ffcc00;
+    box-shadow: 0 0 0 3px rgba(255, 204, 0, 0.1);
   }
 
   &::placeholder {
-    color: #555;
+    color: #999;
   }
 
-  &[type='text']:invalid {
+  &:invalid {
     border-color: #ff4d4d;
   }
 
   @media (max-width: 768px) {
     font-size: 0.9rem;
-    padding: 8px;
+    padding: 8px 10px;
   }
 `;
 
 const ModalLabel = styled.label`
-  font-size: 1rem;
-  color: #e6e9f0;
-  text-align: left;
-  margin-bottom: 5px;
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: #040b1f;
+  margin-bottom: 6px;
 
   @media (max-width: 768px) {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
 `;
 
@@ -248,10 +260,13 @@ const ModalAmount = styled.p`
   font-size: 1.2rem;
   font-weight: 600;
   color: #ffcc00;
-  margin: 10px 0;
+  background: rgba(255, 204, 0, 0.1);
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin: 12px 0;
 
   @media (max-width: 768px) {
-    font-size: 1rem;
+    font-size: 1.1rem;
   }
 `;
 
@@ -264,15 +279,15 @@ const ModalButton = styled.button`
   border: none;
   border-radius: 8px;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
 
   &:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(4, 11, 31, 0.3);
+    box-shadow: 0 4px 12px rgba(255, 204, 0, 0.3);
   }
 
   &:disabled {
-    background: #ccc;
+    background: #cccccc;
     cursor: not-allowed;
     transform: none;
     box-shadow: none;
@@ -284,20 +299,55 @@ const ModalButton = styled.button`
   }
 `;
 
-const SuccessMessage = styled.p`
+const CloseButton = styled.button`
+  padding: 12px 24px;
   font-size: 1rem;
-  color: #ffcc00;
-  margin-top: 15px;
+  font-weight: 600;
+  color: #040b1f;
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: background 0.3s ease, transform 0.3s ease;
+
+  &:hover {
+    background: #f5f5f5;
+    transform: translateY(-2px);
+  }
 
   @media (max-width: 768px) {
+    padding: 10px 20px;
     font-size: 0.9rem;
   }
 `;
 
+const SuccessMessage = styled(motion.p)`
+  font-size: 1rem;
+  font-weight: 500;
+  color: #4caf50;
+  margin: 16px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+
+  svg {
+    font-size: 1.2rem;
+  }
+
+  @media (max-width: 768px) {
+    font-size: 0.9rem;
+    svg {
+      font-size: 1.1rem;
+    }
+  }
+`;
+
 const ErrorMessage = styled.p`
-  font-size: 0.9rem;
+  font-size: 0.85rem;
   color: #ff4d4d;
-  margin-top: 5px;
+  margin-top: 4px;
+  text-align: left;
 
   @media (max-width: 768px) {
     font-size: 0.8rem;
@@ -573,9 +623,9 @@ const Info = () => {
             onClick={closeModal}
           >
             <ModalContent
-              initial={{ scale: 0.8, opacity: 0 }}
+              initial={{ scale: 0.9, opacity: 0 }}
               animate={{ scale: 1, opacity: 1 }}
-              exit={{ scale: 0.8, opacity: 0 }}
+              exit={{ scale: 0.9, opacity: 0 }}
               transition={{ duration: 0.3 }}
               onClick={(e) => e.stopPropagation()}
             >
@@ -584,7 +634,7 @@ const Info = () => {
                 <>
                   <ModalAmount>To‘lov summasi: {course.price}</ModalAmount>
                   <ModalForm onSubmit={handleSubmit}>
-                    <div>
+                    <ModalInputWrapper>
                       <ModalLabel htmlFor="cardNumber">Karta raqami</ModalLabel>
                       <ModalInput
                         type="text"
@@ -596,8 +646,8 @@ const Info = () => {
                         required
                       />
                       {errors.cardNumber && <ErrorMessage>{errors.cardNumber}</ErrorMessage>}
-                    </div>
-                    <div>
+                    </ModalInputWrapper>
+                    <ModalInputWrapper>
                       <ModalLabel htmlFor="expiryDate">Amal qilish muddati (MM/YY)</ModalLabel>
                       <ModalInput
                         type="text"
@@ -609,16 +659,29 @@ const Info = () => {
                         required
                       />
                       {errors.expiryDate && <ErrorMessage>{errors.expiryDate}</ErrorMessage>}
+                    </ModalInputWrapper>
+                    <div style={{ display: 'flex', gap: '12px', justifyContent: 'center' }}>
+                      <ModalButton type="submit" disabled={isSubmitting}>
+                        {isSubmitting ? (
+                          <Spinner />
+                        ) : (
+                          'To‘lov qilish'
+                        )}
+                      </ModalButton>
+                      <CloseButton type="button" onClick={closeModal}>
+                        Bekor qilish
+                      </CloseButton>
                     </div>
-                    <ModalButton type="submit" disabled={isSubmitting}>
-                      {isSubmitting ? 'Yuborilmoqda...' : 'Oplatit'}
-                    </ModalButton>
                   </ModalForm>
                 </>
               ) : (
                 <>
-                  <SuccessMessage>
-                    Siz {course.price} summasini muvaffaqiyatli to‘ladingiz!
+                  <SuccessMessage
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <CheckCircleIcon /> Siz {course.price} summasini muvaffaqiyatli to‘ladingiz!
                   </SuccessMessage>
                   <ModalButton onClick={closeModal}>Yopish</ModalButton>
                 </>
@@ -630,5 +693,25 @@ const Info = () => {
     </InfoSection>
   );
 };
+
+// Спиннер для кнопки
+const Spinner = styled.div`
+  width: 20px;
+  height: 20px;
+  border: 2px solid #040b1f;
+  border-top: 2px solid #ffcc00;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+  display: inline-block;
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+`;
 
 export default Info;

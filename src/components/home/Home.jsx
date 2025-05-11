@@ -174,7 +174,6 @@ const Home = () => {
           </span>
           <span>Biz bilan o‘z kelajagingizni yarating! Eng yaxshi o‘qituvchilar va zamonaviy kurslar bilan ta’lim oling.</span>
         </Description>
-        <CTAButton>Batafsil ma'lumot</CTAButton>
       </TextSection>
     </HomeContainer>
 

@@ -7,7 +7,7 @@ const HeaderContainer = styled.div`
   align-items: center;
   justify-content: space-between;
   width: 100vw;
-  min-height: 400px;
+  min-height: 430px;
   padding: 60px 100px;
   position: relative;
   overflow-x: hidden; /* Предотвращаем горизонтальный скролл */

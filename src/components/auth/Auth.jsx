@@ -1,7 +1,7 @@
 import React, { useState, useCallback } from 'react';
 import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { HomeOutlined, EmailOutlined, PersonOutline, LockOutlined } from '@mui/icons-material';
 
 const AuthSection = styled.section`
@@ -22,7 +22,7 @@ const HomeIcon = styled(Link)`
   top: 20px;
   left: 20px;
   color: #ffcc00;
-  transition: color 0.3s ease, transform 0.3s ease;
+  transition: color 0.4s ease, transform 0.4s ease;
 
   &:hover {
     color: #ffd700;
@@ -87,7 +87,7 @@ const Input = styled.input`
   background: rgba(255, 255, 255, 0.1);
   color: #e6e9f0;
   outline: none;
-  transition: border-color 0.3s ease, background 0.3s ease;
+  transition: border-color 0.4s ease, background 0.4s ease;
 
   &:focus {
     border-color: #ffcc00;
@@ -114,7 +114,7 @@ const InputIcon = styled.span`
   top: 50%;
   transform: translateY(-50%);
   color: #a0a8c0;
-  transition: color 0.3s ease;
+  transition: color 0.4s ease;
 
   ${Input}:focus ~ & {
     color: #ffcc00;
@@ -137,11 +137,15 @@ const SubmitButton = styled.button`
   border-radius: 8px;
   cursor: pointer;
   margin: 8px auto 0;
-  transition: all 0.3s ease;
+  transition: transform 0.4s ease, box-shadow 0.4s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 
   &:hover {
     transform: translateY(-1px);
-    box-shadow: 0 4px 12px rgba(255, 204, 0, 0.3);
+    box-shadow: 0 6px 16px rgba(255, 204, 0, 0.4);
   }
 
   &:disabled {
@@ -157,6 +161,24 @@ const SubmitButton = styled.button`
   }
 `;
 
+const Spinner = styled.span`
+  width: 16px;
+  height: 16px;
+  border: 2px solid #040b1f;
+  border-top: 2px solid #ffcc00;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+
+  @keyframes spin {
+    0% {
+      transform: rotate(0deg);
+    }
+    100% {
+      transform: rotate(360deg);
+    }
+  }
+`;
+
 const SwitchLink = styled.button`
   font-size: 0.85rem;
   color: #ffcc00;
@@ -164,7 +186,7 @@ const SwitchLink = styled.button`
   border: none;
   cursor: pointer;
   margin-top: 12px;
-  transition: color 0.3s ease;
+  transition: color 0.4s ease;
 
   &:hover {
     color: #ffd700;
@@ -189,9 +211,10 @@ const ErrorMessage = styled.p`
   }
 `;
 
-const SuccessMessage = styled.p`
+const SuccessMessage = styled(motion.p)`
   font-size: 0.9rem;
-  color: #ffcc00;
+  font-weight: 600;
+  color: #4caf50;
   margin-top: 12px;
   max-width: 280px;
   margin-left: auto;
@@ -216,6 +239,7 @@ const Auth = () => {
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [successMessage, setSuccessMessage] = useState('');
+  const navigate = useNavigate();
 
   const handleSwitch = useCallback(() => {
     setIsRegister((prev) => !prev);
@@ -264,20 +288,52 @@ const Auth = () => {
   }, [formData, isRegister]);
 
   const handleSubmit = useCallback(
-    (e) => {
+    async (e) => {
       e.preventDefault();
       if (validateForm()) {
         setIsSubmitting(true);
-        setTimeout(() => {
-          setIsSubmitting(false);
+        try {
+          const endpoint = isRegister ? '/register' : '/login';
+          const payload = isRegister
+            ? { email: formData.email, login: formData.login, password: formData.password }
+            : { login: formData.login, password: formData.password };
+
+          const response = await fetch(`https://orzu-academy-server.vercel.app${endpoint}`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          });
+
+          const data = await response.json();
+
+          if (!response.ok) {
+            throw new Error(data.error || 'Server xatosi');
+          }
+
           setSuccessMessage(
-            isRegister ? 'Muvaffaqiyatli ro‘yxatdan o‘tdingiz!' : 'Muvaffaqiyatli kirdingiz!'
+            isRegister
+              ? "Siz muvaffaqiyatli ro‘yxatdan o‘tdingiz! Iltimos, tizimga kiring."
+              : "Tizimga muvaffaqiyatli kirdingiz!"
           );
           setFormData({ email: '', login: '', password: '' });
-        }, 1000); // Имитация запроса
+          localStorage.setItem('token', data.token);
+
+          if (isRegister) {
+            setIsRegister(false); // Переключение на форму входа
+          } else {
+            navigate('/cabinet'); // Перенаправление в личный кабинет
+          }
+        } catch (error) {
+          setErrors((prev) => ({
+            ...prev,
+            [isRegister ? 'email' : 'login']: error.message,
+          }));
+        } finally {
+          setIsSubmitting(false);
+        }
       }
     },
-    [isRegister, validateForm]
+    [isRegister, formData, validateForm, navigate]
   );
 
   return (
@@ -345,14 +401,22 @@ const Auth = () => {
                 {errors.password && <ErrorMessage>{errors.password}</ErrorMessage>}
               </InputWrapper>
               <SubmitButton type="submit" disabled={isSubmitting}>
-                {isSubmitting ? 'Yuborilmoqda...' : isRegister ? 'Ro‘yxatdan o‘tish' : 'Kirish'}
+                {isSubmitting ? <Spinner /> : isRegister ? 'Ro‘yxatdan o‘tish' : 'Kirish'}
               </SubmitButton>
               <SwitchLink onClick={handleSwitch}>
                 {isRegister
                   ? 'Allaqachon hisobingiz bormi? Kirish'
                   : 'Hali hisobingiz yo‘qmi? Ro‘yxatdan o‘tish'}
               </SwitchLink>
-              {successMessage && <SuccessMessage>{successMessage}</SuccessMessage>}
+              {successMessage && (
+                <SuccessMessage
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{ duration: 0.3 }}
+                >
+                  {successMessage}
+                </SuccessMessage>
+              )}
             </AuthForm>
           </motion.div>
         </AnimatePresence>

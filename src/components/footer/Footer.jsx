@@ -19,7 +19,7 @@ import {
 } from '@mui/icons-material';
 
 const FooterContainer = styled(motion.footer)`
-  background: linear-gradient(180deg, #040b1f, #0a1a3d);
+  background: linear-gradient(180deg, #040b1f,rgb(3, 9, 23));
   color: #e6e9f0;
   padding: 60px 20px;
   text-align: center;

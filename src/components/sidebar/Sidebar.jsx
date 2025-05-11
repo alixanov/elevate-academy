@@ -6,17 +6,18 @@ import MenuBookIcon from '@mui/icons-material/MenuBook';
 import SchoolIcon from '@mui/icons-material/School';
 import PhoneIcon from '@mui/icons-material/Phone';
 import EditIcon from '@mui/icons-material/Edit';
+import PersonOutline from '@mui/icons-material/PersonOutline';
 
 const NavbarContainer = styled.nav`
   width: 100%;
-  background: #040b1f;
-  color: #e6e9f0;
+  background: #ffffff;
+  color: #040b1f;
   position: fixed;
   top: 0;
   left: 0;
   z-index: 1000;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
-  padding: 10px 20px;
+  padding: 20px 20px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 `;
 
 const NavbarContent = styled.div`
@@ -42,7 +43,7 @@ const ContactBar = styled.div`
 `;
 
 const ContactButton = styled.button`
-  color: #e6e9f0;
+  color: #040b1f;
   font-size: 0.85rem;
   font-weight: 400;
   text-decoration: none;
@@ -52,10 +53,15 @@ const ContactButton = styled.button`
   background: none;
   border: none;
   cursor: pointer;
-  transition: color 0.3s ease;
+  transition: color 0.4s ease, text-shadow 0.4s ease;
 
   &:hover {
     color: #ffcc00;
+    text-shadow: 0 1px 3px rgba(255, 204, 0, 0.3);
+  }
+
+  &:hover svg {
+    transform: scale(1.2) translateX(3px);
   }
 
   &:focus {
@@ -65,6 +71,7 @@ const ContactButton = styled.button`
 
   svg {
     font-size: 0.9rem;
+    transition: transform 0.4s ease;
   }
 
   @media (max-width: 768px) {
@@ -82,7 +89,7 @@ const HeaderContent = styled.div`
 
   h1 {
     font-size: 1.5rem;
-    color: #e6e9f0;
+    color: #040b1f;
     font-weight: 600;
     margin: 0;
   }
@@ -114,16 +121,15 @@ const NavItem = styled.li`
 const NavLinkStyled = styled(Link)`
   display: flex;
   align-items: center;
-  padding: 10px 15px;
-  color: #040b1f;
+  padding: 5px 15px;
+  color: #ffffff;
   text-decoration: none;
   font-size: 1rem;
   font-weight: 500;
   border-radius: 8px;
-  background: linear-gradient(135deg, #e6e9f0 0%, #c9d1e6 100%);
+  background: #040b1f;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s ease-in-out;
-  position: relative;
+  transition: background 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease;
 
   &.btn {
     background: linear-gradient(135deg, #ffcc00 0%, #ffd700 100%);
@@ -133,27 +139,40 @@ const NavLinkStyled = styled(Link)`
 
     &:hover {
       background: linear-gradient(135deg, #ffd700 0%, #ffcc00 100%);
-      box-shadow: 0 4px 12px rgba(4, 11, 31, 0.4);
-      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(255, 204, 0, 0.5);
+      transform: scale(1.03);
     }
   }
 
   &:hover {
-    background: linear-gradient(135deg, #ffffff 0%, #e6e9f0 100%);
-    transform: translateX(3px);
-    box-shadow: 0 4px 12px rgba(4, 11, 31, 0.3);
-    color: #1a2b5f;
+    background: #0a1a3d;
+    transform: scale(1.03);
+    box-shadow: 0 4px 16px rgba(255, 204, 0, 0.3);
   }
 
   &:focus {
     outline: none;
-    box-shadow: 0 0 0 3px rgba(4, 11, 31, 0.5);
+    box-shadow: 0 0 0 3px rgba(255, 204, 0, 0.5);
   }
 
   svg {
     margin-right: 10px;
     font-size: 1.2rem;
-    transition: color 0.3s ease-in-out;
+    color: #ffffff;
+    transition: color 0.4s ease, transform 0.4s ease;
+  }
+
+  &:hover svg {
+    color: #ffcc00;
+    transform: translateX(3px);
+  }
+
+  &.btn svg {
+    color: #040b1f;
+  }
+
+  &.btn:hover svg {
+    color: #040b1f;
   }
 
   @media (max-width: 768px) {
@@ -173,8 +192,9 @@ const NavLinkStyled = styled(Link)`
     }
 
     &:hover {
-      transform: scale(1.1);
-      background: linear-gradient(135deg, #ffffff 0%, #e6e9f0 100%);
+      transform: scale(1.05);
+      background: #0a1a3d;
+      box-shadow: 0 4px 16px rgba(255, 204, 0, 0.3);
     }
 
     &.btn {
@@ -182,8 +202,9 @@ const NavLinkStyled = styled(Link)`
       background: linear-gradient(135deg, #ffcc00 0%, #ffd700 100%);
 
       &:hover {
-        transform: scale(1.1);
+        transform: scale(1.05);
         background: linear-gradient(135deg, #ffd700 0%, #ffcc00 100%);
+        box-shadow: 0 6px 20px rgba(255, 204, 0, 0.5);
       }
     }
   }
@@ -192,6 +213,7 @@ const NavLinkStyled = styled(Link)`
 const Navbar = () => {
   const { pathname } = useLocation();
   const isHomePage = pathname === '/';
+  const isAuthenticated = !!localStorage.getItem('token');
 
   const handleContactClick = useCallback((action) => {
     if (action.startsWith('mailto:') || action.startsWith('tel:')) {
@@ -205,12 +227,9 @@ const Navbar = () => {
     if (isHomePage) {
       const element = document.getElementById(id);
       if (element) {
-        // Добавляем scrollMarginTop для учета высоты Navbar
         element.style.scrollMarginTop = '90px';
-        // Добавляем временный класс для margin-bottom
         element.classList.add('temp-margin-bottom');
         element.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        // Удаляем margin-bottom через 1 секунду
         setTimeout(() => {
           element.classList.remove('temp-margin-bottom');
           element.style.scrollMarginTop = '';
@@ -223,8 +242,8 @@ const Navbar = () => {
   const styleSheet = document.createElement('style');
   styleSheet.innerText = `
     .temp-margin-bottom {
-      margin-bottom: 5px;
-      transition: margin-bottom 0.3s ease;
+      margin-bottom: 50px;
+      transition: margin-bottom 0.4s ease;
     }
   `;
   document.head.appendChild(styleSheet);
@@ -276,6 +295,7 @@ const Navbar = () => {
               to={isHomePage ? '/#home' : '/'}
               onClick={() => handleNavClick('header')}
               aria-label="Bosh Sahifa"
+              aria-current={pathname === '/' ? 'page' : undefined}
             >
               <HomeFilledIcon />
               <span>Bosh Sahifa</span>
@@ -286,6 +306,7 @@ const Navbar = () => {
               to={isHomePage ? '/#courses' : '/courses'}
               onClick={() => handleNavClick('courses')}
               aria-label="Kurslar"
+              aria-current={pathname === '/courses' ? 'page' : undefined}
             >
               <MenuBookIcon />
               <span>Kurslar</span>
@@ -296,6 +317,7 @@ const Navbar = () => {
               to={isHomePage ? '/#teachers-section' : '/teachers-section'}
               onClick={() => handleNavClick('teachers-section')}
               aria-label="O‘qituvchilar"
+              aria-current={pathname === '/teachers-section' ? 'page' : undefined}
             >
               <SchoolIcon />
               <span>O‘qituvchilar</span>
@@ -306,6 +328,7 @@ const Navbar = () => {
               to={isHomePage ? '/#feedback' : '/feedback'}
               onClick={() => handleNavClick('feedback')}
               aria-label="Fikrlaringiz"
+              aria-current={pathname === '/feedback' ? 'page' : undefined}
             >
               <PhoneIcon />
               <span>Fikrlaringiz</span>
@@ -313,12 +336,13 @@ const Navbar = () => {
           </NavItem>
           <NavItem>
             <NavLinkStyled
-              to="/register"
+              to={isAuthenticated ? '/cabinet' : '/register'}
               className="btn"
-              aria-label="Ro‘yxatdan o‘tish"
+              aria-label={isAuthenticated ? 'Shaxsiy kabinet' : 'Ro‘yxatdan o‘tish'}
+              aria-current={isAuthenticated && pathname === '/cabinet' ? 'page' : undefined}
             >
-              <EditIcon />
-              <span>Ro‘yxatdan o‘tish</span>
+              {isAuthenticated ? <PersonOutline /> : <EditIcon />}
+              <span>{isAuthenticated ? 'Shaxsiy kabinet' : 'Ro‘yxatdan o‘tish'}</span>
             </NavLinkStyled>
           </NavItem>
         </NavList>
