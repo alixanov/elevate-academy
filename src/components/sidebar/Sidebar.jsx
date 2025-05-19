@@ -132,14 +132,14 @@ const NavLinkStyled = styled(Link)`
   transition: background 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease;
 
   &.btn {
-    background: linear-gradient(135deg, #ffcc00 0%, #ffd700 100%);
-    color: #040b1f;
+    background: #040b1f;
+    color: #ffffff;
     font-weight: 600;
     padding: 12px 20px;
 
     &:hover {
-      background: linear-gradient(135deg, #ffd700 0%, #ffcc00 100%);
-      box-shadow: 0 6px 20px rgba(255, 204, 0, 0.5);
+      background: #0a1a3d;
+      box-shadow: 0 6px 20px rgba(10, 26, 61, 0.5);
       transform: scale(1.03);
     }
   }
@@ -168,11 +168,11 @@ const NavLinkStyled = styled(Link)`
   }
 
   &.btn svg {
-    color: #040b1f;
+    color: #ffffff;
   }
 
   &.btn:hover svg {
-    color: #040b1f;
+    color: #ffcc00;
   }
 
   @media (max-width: 768px) {
@@ -199,12 +199,12 @@ const NavLinkStyled = styled(Link)`
 
     &.btn {
       padding: 10px;
-      background: linear-gradient(135deg, #ffcc00 0%, #ffd700 100%);
+      background: #040b1f;
 
       &:hover {
         transform: scale(1.05);
-        background: linear-gradient(135deg, #ffd700 0%, #ffcc00 100%);
-        box-shadow: 0 6px 20px rgba(255, 204, 0, 0.5);
+        background: #0a1a3d;
+        box-shadow: 0 6px 20px rgba(10, 26, 61, 0.5);
       }
     }
   }

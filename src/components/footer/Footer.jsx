@@ -13,13 +13,11 @@ import {
   HomeFilled,
   Info,
   MenuBook,
-  People,
   AttachMoney,
-  ContactMail,
 } from '@mui/icons-material';
 
 const FooterContainer = styled(motion.footer)`
-  background: linear-gradient(180deg, #040b1f,rgb(3, 9, 23));
+  background: linear-gradient(180deg, #040b1f, rgb(3, 9, 23));
   color: #e6e9f0;
   padding: 60px 20px;
   text-align: center;
@@ -169,13 +167,9 @@ const Footer = () => {
         <FooterColumn>
           <ColumnTitle>Foydali havolalar</ColumnTitle>
           <FooterList>
+      
             <li>
-              <FooterLink to="/#home">
-                <HomeFilled /> Bosh sahifa
-              </FooterLink>
-            </li>
-            <li>
-              <FooterLink to="/#about">
+              <FooterLink to="/#feedback">
                 <Info /> O‘quv markaz haqida
               </FooterLink>
             </li>
@@ -185,23 +179,13 @@ const Footer = () => {
               </FooterLink>
             </li>
             <li>
-              <FooterLink to="/#teachers">
+              <FooterLink to="/#teachers-section">
                 <School /> O‘qituvchilar
               </FooterLink>
             </li>
             <li>
-              <FooterLink to="/#students">
-                <People /> O‘quvchilar
-              </FooterLink>
-            </li>
-            <li>
-              <FooterLink to="/#pricing">
+              <FooterLink to="/#courses">
                 <AttachMoney /> Narxlar
-              </FooterLink>
-            </li>
-            <li>
-              <FooterLink to="/#contact">
-                <ContactMail /> Bog‘lanish
               </FooterLink>
             </li>
           </FooterList>

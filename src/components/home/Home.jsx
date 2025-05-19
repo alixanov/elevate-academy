@@ -163,7 +163,7 @@ const Home = () => {
     <HomeContainer>
       <TextSection>
         <Title>
-          <span>Orzu Academy</span> O‘quv Markaziga Xush Kelibsiz
+          <span>Orzu Academy O‘quv Markaziga Xush Kelibsiz</span> 
         </Title>
         <Description>
           <span>

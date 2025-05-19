@@ -133,7 +133,7 @@ const Header = () => {
     <HeaderContainer>
       <TxtCourseLearning>
         <Title>
-          <span>Orzu O‘quv Markazi</span>da Bilim Oling!
+          <span>Orzu O‘quv Markazi da Bilim Oling! </span>
         </Title>
         <Description>
           Kelajagingizni biz bilan quring! Tajribali o‘qituvchilar va zamonaviy kurslar sizni kutmoqda.

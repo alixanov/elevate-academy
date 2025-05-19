@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import styled from 'styled-components';
 import { Swiper, SwiperSlide } from 'swiper/react';
 import { Navigation, Pagination, Autoplay } from 'swiper/modules';
@@ -118,6 +118,7 @@ const FeedbackCard = styled.div`
   transition: transform 0.3s ease, box-shadow 0.3s ease;
   border: 1px solid rgba(255, 255, 255, 0.1);
   box-sizing: border-box;
+  cursor: pointer;
 
   &:hover {
     transform: translateY(-3px);
@@ -159,6 +160,83 @@ const StudentName = styled.p`
   @media (max-width: 768px) {
     font-size: 0.85rem;
   }
+`;
+
+const ModalOverlay = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(4, 11, 31, 0.8);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
+  opacity: ${({ isOpen }) => (isOpen ? 1 : 0)};
+  visibility: ${({ isOpen }) => (isOpen ? 'visible' : 'hidden')};
+  transition: opacity 0.3s ease, visibility 0.3s ease;
+`;
+
+const ModalContent = styled.div`
+  background: linear-gradient(135deg, #040b1f, #0a1a3d);
+  border-radius: 16px;
+  padding: 30px;
+  max-width: 600px;
+  width: 90%;
+  max-height: 80vh;
+  overflow-y: auto;
+  position: relative;
+  box-shadow: 0 8px 24px rgba(255, 204, 0, 0.2);
+  transform: ${({ isOpen }) => (isOpen ? 'scale(1)' : 'scale(0.8)')};
+  transition: transform 0.3s ease;
+
+  @media (max-width: 768px) {
+    padding: 20px;
+    width: 95%;
+  }
+`;
+
+const ModalCloseButton = styled.button`
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: none;
+  border: none;
+  color: #ffcc00;
+  font-size: 1.2rem;
+  cursor: pointer;
+  transition: color 0.3s ease, transform 0.3s ease;
+
+  &:hover {
+    color: #ffd700;
+    transform: scale(1.1);
+  }
+
+  &:focus {
+    outline: none;
+    box-shadow: 0 0 0 2px rgba(255, 204, 0, 0.5);
+  }
+`;
+
+const ModalText = styled.p`
+  font-size: 1.2rem;
+  color: #e6e9f0;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  text-align: left;
+
+  @media (max-width: 768px) {
+    font-size: 1rem;
+  }
+`;
+
+const ModalStudentName = styled.p`
+  font-size: 1rem;
+  font-weight: 600;
+  color: #ffcc00;
+  text-align: left;
+  margin: 0;
 `;
 
 const FeedbackFormSection = styled.section`
@@ -327,12 +405,15 @@ const Reviews = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [reviews, setReviews] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [selectedReview, setSelectedReview] = useState(null);
+  const modalRef = useRef(null);
+  const closeButtonRef = useRef(null);
 
   // Загрузка отзывов с сервера
   useEffect(() => {
     const fetchReviews = async () => {
       try {
-        const response = await fetch('https://orzu-academy-backend.vercel.app/reviews');
+        const response = await fetch('http://localhost:5000/reviews');
         if (!response.ok) throw new Error('Fikrlarni yuklashda xato');
         const data = await response.json();
         setReviews(data);
@@ -345,6 +426,56 @@ const Reviews = () => {
     };
     fetchReviews();
   }, []);
+
+  // Обработка клика по карточке
+  const handleCardClick = (review) => {
+    setSelectedReview(review);
+  };
+
+  // Закрытие модалки
+  const handleCloseModal = () => {
+    setSelectedReview(null);
+  };
+
+  // Обработка клавиш для модалки
+  useEffect(() => {
+    const handleKeyDown = (e) => {
+      if (e.key === 'Escape' && selectedReview) {
+        handleCloseModal();
+      }
+    };
+
+    const handleFocusTrap = (e) => {
+      if (!modalRef.current || !selectedReview) return;
+      const focusableElements = modalRef.current.querySelectorAll(
+        'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
+      );
+      const firstElement = focusableElements[0];
+      const lastElement = focusableElements[focusableElements.length - 1];
+
+      if (e.key === 'Tab') {
+        if (e.shiftKey && document.activeElement === firstElement) {
+          e.preventDefault();
+          lastElement.focus();
+        } else if (!e.shiftKey && document.activeElement === lastElement) {
+          e.preventDefault();
+          firstElement.focus();
+        }
+      }
+    };
+
+    document.addEventListener('keydown', handleKeyDown);
+    document.addEventListener('keydown', handleFocusTrap);
+
+    if (selectedReview && closeButtonRef.current) {
+      closeButtonRef.current.focus();
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.removeEventListener('keydown', handleFocusTrap);
+    };
+  }, [selectedReview]);
 
   const handleInputChange = (e) => {
     const { id, value } = e.target;
@@ -375,8 +506,8 @@ const Reviews = () => {
     if (validateForm()) {
       setIsSubmitting(true);
       try {
-        const token = localStorage.getItem('token'); // Опционально, если нужна авторизация
-        const response = await fetch('https://orzu-academy-backend.vercel.app/reviews', {
+        const token = localStorage.getItem('token');
+        const response = await fetch('http://localhost:5000/reviews', {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
@@ -392,7 +523,7 @@ const Reviews = () => {
           throw new Error(errorData.error || 'Fikr yuborishda xato');
         }
         const newReview = await response.json();
-        setReviews((prev) => [newReview, ...prev]); // Добавляем новый отзыв в начало
+        setReviews((prev) => [newReview, ...prev]);
         setIsSubmitted(true);
         setFormData({ name: '', feedback: '' });
       } catch (error) {
@@ -429,7 +560,7 @@ const Reviews = () => {
             >
               {reviews.map((review) => (
                 <SwiperSlide key={review._id}>
-                  <FeedbackCard>
+                  <FeedbackCard onClick={() => handleCardClick(review)}>
                     <FeedbackText>"{review.text}"</FeedbackText>
                     <StudentName>– {review.name}</StudentName>
                   </FeedbackCard>
@@ -439,6 +570,28 @@ const Reviews = () => {
           )}
         </SwiperContainer>
       </ReviewsSection>
+
+      <ModalOverlay isOpen={!!selectedReview} onClick={handleCloseModal}>
+        <ModalContent
+          isOpen={!!selectedReview}
+          ref={modalRef}
+          onClick={(e) => e.stopPropagation()}
+        >
+          <ModalCloseButton
+            ref={closeButtonRef}
+            onClick={handleCloseModal}
+            aria-label="Modalni yopish"
+          >
+            ✕
+          </ModalCloseButton>
+          {selectedReview && (
+            <>
+              <ModalText>"{selectedReview.text}"</ModalText>
+              <ModalStudentName>– {selectedReview.name}</ModalStudentName>
+            </>
+          )}
+        </ModalContent>
+      </ModalOverlay>
 
       <FeedbackFormSection>
         <FormTitle>O‘quv Markazi Haqida Fikringiz</FormTitle>
@@ -486,4 +639,5 @@ const Reviews = () => {
     </div>
   );
 };
+
 export default Reviews;
